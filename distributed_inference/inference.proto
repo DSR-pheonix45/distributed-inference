@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package inference;
+
+service InferenceService {
+  rpc ProcessLayer (LayerRequest) returns (LayerResponse);
+  rpc InitializeWorker (InitRequest) returns (InitResponse);
+  rpc Heartbeat (HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+message InitRequest {
+  bytes model_layer = 1;
+  int32 layer_id = 2;
+}
+
+message InitResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message LayerRequest {
+  bytes input_tensor = 1;
+  int32 layer_id = 2;
+  bool is_final = 3;
+}
+
+message LayerResponse {
+  bytes output_tensor = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message HeartbeatRequest {
+  int64 timestamp = 1;
+}
+
+message HeartbeatResponse {
+  int64 timestamp = 1;
+  float gpu_utilization = 2;
+  float memory_utilization = 3;
+}
